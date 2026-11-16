@@ -1,0 +1,4 @@
+winhide.exe
+build/
+*.tmp
+winhide.cfg
