@@ -105,6 +105,10 @@ void eprintln(const std::wstring& s) {
     fflush(stderr);
 }
 
+void printlnErr(const std::wstring& s) {
+    eprintln(s);
+}
+
 std::wstring dim(const std::wstring& s) {
     return g_color ? L"\x1b[2m" + s + L"\x1b[0m" : s;
 }

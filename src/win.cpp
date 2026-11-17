@@ -152,6 +152,12 @@ std::wstring describeWindow(const WindowInfo& window) {
 
 void minimizeWindow(HWND hwnd) {
     ShowWindow(hwnd, SW_MINIMIZE);
+
+    // Alt+Tab is ordered by z-order (most recent first). Minimizing alone can
+    // leave the window near the top, so push it to the bottom: it then shows up
+    // last in Alt+Tab instead of getting in the way.
+    SetWindowPos(hwnd, HWND_BOTTOM, 0, 0, 0, 0,
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
 }
 
 void restoreAndFocus(HWND hwnd) {

@@ -177,21 +177,28 @@ bool promptYesNo(const std::wstring& question, bool defaultYes) {
     return c == L'y';
 }
 
-void printWindowTable(const std::vector<WindowInfo>& rows, bool numbered) {
+void printWindowTable(const std::vector<WindowInfo>& rows, bool numbered, bool toErr = false) {
+    auto emit = [toErr](const std::wstring& line) {
+        if (toErr)
+            printlnErr(line);
+        else
+            println(line);
+    };
+
     if (rows.empty()) {
-        println(L"  No selectable windows found.");
+        emit(L"  No selectable windows found.");
         return;
     }
     std::wstring header = L"  " + padRight(L"#", 4) + padRight(L"PID", 8) +
                           padRight(L"PROCESS", kProcessWidth + 2) + padRight(L"STATE", 7) + L"TITLE";
-    println(dim(header));
+    emit(dim(header));
     for (size_t i = 0; i < rows.size(); i++) {
         const WindowInfo& w = rows[i];
         std::wstring num = numbered ? std::to_wstring(i + 1) : L"-";
         std::wstring state = w.minimized ? L"min" : L"shown";
-        println(L"  " + padRight(num, 4) + padRight(std::to_wstring(w.pid), 8) +
-                padRight(truncate(w.process, kProcessWidth), kProcessWidth + 2) + padRight(state, 7) +
-                truncate(w.title, kTitleWidth));
+        emit(L"  " + padRight(num, 4) + padRight(std::to_wstring(w.pid), 8) +
+             padRight(truncate(w.process, kProcessWidth), kProcessWidth + 2) + padRight(state, 7) +
+             truncate(w.title, kTitleWidth));
     }
 }
 
@@ -258,7 +265,7 @@ int notFound(const Target& target) {
         if (!same.empty()) {
             eprintln();
             eprintln(L"Windows from " + target.process + L" right now:");
-            printWindowTable(same, false);
+            printWindowTable(same, false, true);
             eprintln(L"Pick one with: winhide --set");
             return kExitNotFound;
         }

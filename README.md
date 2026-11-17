@@ -61,6 +61,13 @@ Kalau lebih dari satu jendela cocok, semuanya di-toggle bersama (ada yang tampil
 -> minimize semua; semua minimize -> tampilkan semua). `--status` menunjukkan
 persis jendela mana yang kepilih.
 
+## Alt+Tab
+
+Saat di-minimize, jendela juga didorong ke dasar z-order. Alt+Tab mengurutkan
+jendela berdasarkan z-order, jadi target yang di-hide muncul paling akhir,
+bukan menyelip di antara jendela yang sedang dipakai. Saat di-show, jendela
+kembali ke depan dan fokus.
+
 ## Config
 
 `winhide.cfg` ditulis di folder yang sama dengan exe, jadi foldernya portable.

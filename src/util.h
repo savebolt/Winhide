@@ -22,6 +22,7 @@ void initConsole();
 void print(const std::wstring& s);
 void println(const std::wstring& s = L"");
 void eprintln(const std::wstring& s = L"");
+void printlnErr(const std::wstring& s = L"");
 
 std::wstring dim(const std::wstring& s);
 std::wstring bold(const std::wstring& s);
