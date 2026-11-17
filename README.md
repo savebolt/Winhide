@@ -66,7 +66,8 @@ persis jendela mana yang kepilih.
 Saat di-minimize, jendela juga didorong ke dasar z-order. Alt+Tab mengurutkan
 jendela berdasarkan z-order, jadi target yang di-hide muncul paling akhir,
 bukan menyelip di antara jendela yang sedang dipakai. Saat di-show, jendela
-kembali ke depan dan fokus.
+dinaikkan lagi ke atas z-order (bukan cuma di-restore), jadi langsung muncul
+di depan dan fokus walaupun `SetForegroundWindow` ditolak Windows.
 
 ## Config
 
