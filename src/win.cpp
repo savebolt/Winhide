@@ -153,24 +153,33 @@ std::wstring describeWindow(const WindowInfo& window) {
 void minimizeWindow(HWND hwnd) {
     ShowWindow(hwnd, SW_MINIMIZE);
 
-    // Alt+Tab is ordered by z-order (most recent first). Minimizing alone can
-    // leave the window near the top, so push it to the bottom: it then shows up
-    // last in Alt+Tab instead of getting in the way.
+    // Alt+Tab is ordered by activation (MRU), but keeping the window at the
+    // bottom of the z-order also keeps it out of the way visually.
     SetWindowPos(hwnd, HWND_BOTTOM, 0, 0, 0, 0,
                  SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
 }
 
 void restoreWindow(HWND hwnd) {
-    // Restore without activating: activation raises the window, which would
-    // move it to the front of Alt+Tab. The window becomes visible again but
-    // stays at the bottom of the z-order, i.e. last in Alt+Tab.
+    // Restore without activating. Alt+Tab is ordered by activation (MRU), not
+    // by z-order, so a window that is raised but never activated stays last in
+    // Alt+Tab while still being visible on top of other windows.
     if (IsIconic(hwnd)) {
-        ShowWindow(hwnd, SW_SHOWNOACTIVATE);
+        // SW_SHOWNOACTIVATE via ShowWindow does not un-minimize, but the same
+        // command through SetWindowPlacement does, and without activation.
+        WINDOWPLACEMENT placement{};
+        placement.length = sizeof(placement);
+        if (GetWindowPlacement(hwnd, &placement)) {
+            placement.showCmd = SW_SHOWNOACTIVATE;
+            SetWindowPlacement(hwnd, &placement);
+        }
         if (IsIconic(hwnd)) ShowWindow(hwnd, SW_RESTORE);
     } else {
         ShowWindow(hwnd, SW_SHOWNOACTIVATE);
     }
 
-    SetWindowPos(hwnd, HWND_BOTTOM, 0, 0, 0, 0,
-                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
+    // A background process cannot reorder the normal z-order band directly, so
+    // go through topmost and back: that raises the window to the top of the
+    // normal band without activating it, which keeps it last in Alt+Tab.
+    SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+    SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 }

@@ -63,14 +63,15 @@ persis jendela mana yang kepilih.
 
 ## Alt+Tab
 
-Saat di-minimize, jendela didorong ke dasar z-order. Alt+Tab mengurutkan jendela
-berdasarkan z-order, jadi target selalu muncul paling akhir, bukan menyelip di
-antara jendela yang sedang dipakai.
+Saat di-hide, jendela di-minimize lalu didorong ke dasar z-order.
 
-Saat di-show, jendela di-restore tanpa diaktifkan lalu tetap ditaruh di dasar
-z-order. Jadi tetap paling akhir di Alt+Tab dan tidak merebut fokus. Konsekuensinya
-jendela tampil di belakang jendela lain; pilih lewat Alt+Tab (paling akhir) atau
-klik kalau mau dipakai.
+Saat di-show, jendela di-restore tanpa diaktifkan, lalu dinaikkan ke atas
+z-order (lewat topmost sebentar) supaya kelihatan di atas jendela lain. Karena
+tidak diaktifkan, posisinya di Alt+Tab tidak melompat ke depan.
+
+Catatan: urutan Alt+Tab diatur Windows berdasarkan riwayat aktivasi, jadi
+winhide tidak bisa memaksa posisi paling akhir secara absolut. Yang dijamin:
+jendela tidak merebut fokus dan tidak melompat ke depan Alt+Tab saat di-show.
 
 ## Config
 
