@@ -34,4 +34,4 @@ std::wstring describeTarget(const Target& target);
 std::wstring describeWindow(const WindowInfo& window);
 
 void minimizeWindow(HWND hwnd);
-void restoreAndFocus(HWND hwnd);
+void restoreWindow(HWND hwnd);

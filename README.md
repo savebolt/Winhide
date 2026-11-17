@@ -20,7 +20,7 @@ winhide.exe                  # toggle target default
 winhide.exe --list           # lihat semua jendela yang bisa dipilih
 winhide.exe --set            # pilih jendela lewat picker, simpan sebagai default
 winhide.exe --set 4          # simpan nomor 4 dari --list
-winhide.exe --show           # tampilkan + fokus
+winhide.exe --show           # tampilkan (tetap paling akhir di Alt+Tab)
 winhide.exe --hide           # minimize
 winhide.exe --status         # target apa yang kepilih, kondisinya apa
 winhide.exe --clear          # hapus target default
@@ -63,11 +63,14 @@ persis jendela mana yang kepilih.
 
 ## Alt+Tab
 
-Saat di-minimize, jendela juga didorong ke dasar z-order. Alt+Tab mengurutkan
-jendela berdasarkan z-order, jadi target yang di-hide muncul paling akhir,
-bukan menyelip di antara jendela yang sedang dipakai. Saat di-show, jendela
-dinaikkan lagi ke atas z-order (bukan cuma di-restore), jadi langsung muncul
-di depan dan fokus walaupun `SetForegroundWindow` ditolak Windows.
+Saat di-minimize, jendela didorong ke dasar z-order. Alt+Tab mengurutkan jendela
+berdasarkan z-order, jadi target selalu muncul paling akhir, bukan menyelip di
+antara jendela yang sedang dipakai.
+
+Saat di-show, jendela di-restore tanpa diaktifkan lalu tetap ditaruh di dasar
+z-order. Jadi tetap paling akhir di Alt+Tab dan tidak merebut fokus. Konsekuensinya
+jendela tampil di belakang jendela lain; pilih lewat Alt+Tab (paling akhir) atau
+klik kalau mau dipakai.
 
 ## Config
 

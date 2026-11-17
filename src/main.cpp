@@ -46,7 +46,7 @@ void printHelp() {
     println(L"  winhide --set <n>                save entry <n> from --list");
     println(L"  winhide --set --process <exe> [--title <text>] [--contains]");
     println(L"                                   save a target without the picker");
-    println(L"  winhide --show                   restore + focus the default target");
+    println(L"  winhide --show                   restore the default target (stays last in Alt+Tab)");
     println(L"  winhide --hide                   minimize the default target");
     println(L"  winhide --status                 show resolved windows and their state");
     println(L"  winhide --clear                  forget the saved target");
@@ -288,7 +288,7 @@ int doToggle(const Target& target) {
             minimizeWindow(w.hwnd);
             println(L"  minimized  " + describeWindow(w));
         } else {
-            restoreAndFocus(w.hwnd);
+            restoreWindow(w.hwnd);
             println(L"  shown      " + describeWindow(w));
         }
     }
@@ -301,7 +301,7 @@ int doAction(const Target& target, bool show) {
 
     for (const auto& w : windows) {
         if (show) {
-            restoreAndFocus(w.hwnd);
+            restoreWindow(w.hwnd);
             println(L"  shown      " + describeWindow(w));
         } else {
             minimizeWindow(w.hwnd);
@@ -352,7 +352,7 @@ int pickerFlow(bool toggleAfter, bool contains) {
 
     if (toggleAfter) {
         if (chosen.minimized) {
-            restoreAndFocus(chosen.hwnd);
+            restoreWindow(chosen.hwnd);
             println(L"  shown      " + describeWindow(chosen));
         } else {
             minimizeWindow(chosen.hwnd);

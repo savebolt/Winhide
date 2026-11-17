@@ -160,30 +160,17 @@ void minimizeWindow(HWND hwnd) {
                  SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
 }
 
-void restoreAndFocus(HWND hwnd) {
+void restoreWindow(HWND hwnd) {
+    // Restore without activating: activation raises the window, which would
+    // move it to the front of Alt+Tab. The window becomes visible again but
+    // stays at the bottom of the z-order, i.e. last in Alt+Tab.
     if (IsIconic(hwnd)) {
-        ShowWindow(hwnd, SW_RESTORE);
+        ShowWindow(hwnd, SW_SHOWNOACTIVATE);
+        if (IsIconic(hwnd)) ShowWindow(hwnd, SW_RESTORE);
     } else {
-        ShowWindow(hwnd, SW_SHOW);
+        ShowWindow(hwnd, SW_SHOWNOACTIVATE);
     }
 
-    // Raise in z-order first. Alt+Tab follows z-order, and SetForegroundWindow
-    // can be refused by the foreground lock, which would otherwise leave the
-    // window at the bottom of the list even though it is visible again.
-    SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-
-    HWND foreground = GetForegroundWindow();
-    DWORD foregroundThread = foreground != nullptr ? GetWindowThreadProcessId(foreground, nullptr) : 0;
-    DWORD thisThread = GetCurrentThreadId();
-    bool attached = false;
-    if (foregroundThread != 0 && foregroundThread != thisThread)
-        attached = AttachThreadInput(thisThread, foregroundThread, TRUE) != FALSE;
-
-    BringWindowToTop(hwnd);
-    SetForegroundWindow(hwnd);
-
-    if (attached) AttachThreadInput(thisThread, foregroundThread, FALSE);
-
-    // Last resort when the foreground lock still refuses the switch.
-    if (GetForegroundWindow() != hwnd) SwitchToThisWindow(hwnd, TRUE);
+    SetWindowPos(hwnd, HWND_BOTTOM, 0, 0, 0, 0,
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
 }
